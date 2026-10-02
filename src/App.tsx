@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import type { MountContext } from './shell-contract';
 import { bookingPath, parseRoute, routePath, startRoute, type Route } from './navigation/routes';
+import { BarbersPage } from './pages/BarbersPage';
 import { DetailPage } from './pages/DetailPage';
 import { SearchPage } from './pages/SearchPage';
 import { ServicesPage } from './pages/ServicesPage';
@@ -16,6 +17,7 @@ function pathInDomain(basePath: string): string {
 /** The owner's sections; the services refuse the same operations to other roles (403). */
 const OWNER_TABS: { route: Route; label: string }[] = [
   { route: { name: 'services' }, label: 'Servicios' },
+  { route: { name: 'barbers' }, label: 'Barberos' },
   { route: { name: 'search' }, label: 'Catálogo' },
 ];
 
@@ -47,6 +49,9 @@ export function App({ context }: { context: MountContext }) {
                            onBook={(serviceId) => context.navigate(bookingPath(route.id, serviceId))} />;
       case 'services':
         if (isOwner) return <ServicesPage api={context.api} />;
+        return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
+      case 'barbers':
+        if (isOwner) return <BarbersPage api={context.api} />;
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
       default:
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
