@@ -28,7 +28,7 @@ export const STYLES = `
 .bs-footer { position: fixed; left: 0; right: 0; bottom: 0; padding: .75rem 1rem; background: #121212;
   border-top: 1px solid #2a2a2a; }
 .bs-tabs { --background: #1e1e1e; margin-bottom: .75rem; }
-.bs-tabs ion-segment-button { --color: #888; --color-checked: #121212; --indicator-color: #d4af37; }
+.bs-tabs ion-segment-button { --color: #888; --color-checked: #d4af37; --indicator-color: #d4af37; }
 .bs-field { margin-bottom: .75rem; }
 .bs-field ion-input, .bs-field ion-textarea { --background: #1e1e1e; --color: #fff; --placeholder-color: #666;
   --border-radius: 10px; --padding-start: 12px; --highlight-color-focused: #d4af37; }
