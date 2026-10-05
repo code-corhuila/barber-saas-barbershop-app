@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IonButton } from '@ionic/react';
+import { barberName } from '../catalog/barber-name';
 import { getBarbershop, listPublicBarbers, listPublicServices } from '../catalog/catalog-api';
 import { formatCop } from '../catalog/money';
 import type { ApiClient } from '../shell-contract';
@@ -60,7 +61,8 @@ export function DetailPage({ api, id, onBack, onBook }: DetailPageProps) {
                 <div key={barber.id} className="bs-card">
                   <span className="bs-logo" aria-hidden="true">✂</span>
                   <span className="bs-grow">
-                    <p className="bs-title">{barber.experienceYears} años de experiencia</p>
+                    <p className="bs-title">{barberName(barber)}</p>
+                    <p className="bs-muted">{barber.experienceYears} años de experiencia</p>
                     {barber.ratingCount > 0 && <p className="bs-gold">⭐ {barber.ratingAvg.toFixed(1)} ({barber.ratingCount})</p>}
                     {barber.bio && <p className="bs-muted">{barber.bio}</p>}
                     {barber.specialties.length > 0 && (
