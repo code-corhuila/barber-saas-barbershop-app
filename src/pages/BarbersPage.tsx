@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { IonButton, IonInput } from '@ionic/react';
+import { barberName } from '../catalog/barber-name';
 import { addSpecialty, listMyBarbers, removeSpecialty } from '../catalog/catalog-api';
 import { validateSpecialty } from '../catalog/forms';
 import type { BarberProfile } from '../catalog/types';
@@ -77,10 +78,10 @@ export function BarbersPage({ api }: { api: ApiClient }) {
           <div key={barber.id} className="bs-card" style={{ display: 'block' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '.5rem' }}>
               <span>
-                <p className="bs-title">{barber.experienceYears} años de experiencia</p>
+                <p className="bs-title">{barberName(barber)}</p>
+                <p className="bs-muted">{barber.experienceYears} años de experiencia</p>
                 {barber.ratingCount > 0 && <p className="bs-gold">⭐ {barber.ratingAvg.toFixed(1)} ({barber.ratingCount})</p>}
                 {barber.bio && <p className="bs-muted">{barber.bio}</p>}
-                <p className="bs-muted">Usuario: {barber.userId}</p>
               </span>
               <IonButton size="small" fill="clear" className="bs-secondary" onClick={() => setEditing(barber)}>Editar</IonButton>
             </div>
