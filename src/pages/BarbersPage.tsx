@@ -6,6 +6,7 @@ import type { BarberProfile } from '../catalog/types';
 import type { ApiClient } from '../shell-contract';
 import { LoadView } from '../ui/LoadView';
 import { messageOf, newIdempotencyKey, useLoad } from '../ui/load';
+import { AddBarberForm } from './AddBarberForm';
 import { BarberForm } from './BarberForm';
 
 /** One specialty input per barber; the key is kept while the same specialty is retried. */
@@ -42,13 +43,15 @@ function SpecialtyAdder({ api, barber, onChanged }: { api: ApiClient; barber: Ba
 }
 
 /**
- * The owner's barbers: the profiles of their barbershop with experience, bio and specialties. It
- * replaces the prototype's (admin)/employees for what the barbershop domain owns; creating the
- * user accounts, commissions and payroll belong to other domains.
+ * The owner's barbers: the profiles of their barbershop with experience, bio and specialties, and
+ * "Agregar barbero" (account and profile, HU-SHOP-002). It replaces the prototype's (admin)/employees
+ * for what the barbershop domain owns; commissions and payroll belong to other domains. Only the
+ * owner reaches it (App shows it for ADMIN_BARBERSHOP; the services answer 403 to anyone else).
  */
 export function BarbersPage({ api }: { api: ApiClient }) {
   const [result, reload] = useLoad(() => listMyBarbers(api), [], 'No se pudieron cargar tus barberos.');
-  const [editing, setEditing] = useState<BarberProfile | null | undefined>(undefined);
+  const [editing, setEditing] = useState<BarberProfile | null>(null);
+  const [adding, setAdding] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
 
   async function remove(barber: BarberProfile, specialtyId: string) {
@@ -65,11 +68,11 @@ export function BarbersPage({ api }: { api: ApiClient }) {
     <section className="bs-page">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1 className="bs-header">Barberos</h1>
-        <IonButton className="bs-primary" onClick={() => setEditing(null)}>+ Nuevo</IonButton>
+        <IonButton className="bs-primary" onClick={() => setAdding(true)}>+ Agregar</IonButton>
       </div>
       {failure && <div className="bs-alert" role="alert">{failure}</div>}
       <LoadView load={result} onRetry={reload} isEmpty={(page) => page.data.length === 0}
-                empty="Aún no tienes barberos con perfil. Crea el primero.">
+                empty="Aún no tienes barberos. Agrega el primero.">
         {(page) => page.data.map((barber) => (
           <div key={barber.id} className="bs-card" style={{ display: 'block' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '.5rem' }}>
@@ -94,9 +97,12 @@ export function BarbersPage({ api }: { api: ApiClient }) {
           </div>
         ))}
       </LoadView>
-      {editing !== undefined && (
-        <BarberForm api={api} barber={editing} onClose={() => setEditing(undefined)}
-                    onSaved={() => { setEditing(undefined); reload(); }} />
+      {editing && (
+        <BarberForm api={api} barber={editing} onClose={() => setEditing(null)}
+                    onSaved={() => { setEditing(null); reload(); }} />
+      )}
+      {adding && (
+        <AddBarberForm api={api} onClose={() => setAdding(false)} onSaved={() => { setAdding(false); reload(); }} />
       )}
     </section>
   );
