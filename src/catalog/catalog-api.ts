@@ -1,5 +1,7 @@
 import type { ApiClient } from '../shell-contract';
-import type { BarberData, BarberProfile, BarberSpecialty, Barbershop, Page, Service, ServiceData } from './types';
+import type {
+  BarberData, BarberProfile, BarberProfileData, BarberSpecialty, Barbershop, Page, Service, ServiceData,
+} from './types';
 
 /**
  * Typed calls to barbershop-service.yaml, ALWAYS through the shell's client (context.api): never
@@ -69,7 +71,7 @@ export function createBarber(api: ApiClient, data: BarberData, idempotencyKey: s
     { userId: data.userId, experienceYears: data.experienceYears, bio: data.bio.trim() || null }, { idempotencyKey });
 }
 
-export function editBarber(api: ApiClient, id: string, data: Omit<BarberData, 'userId'>): Promise<BarberProfile> {
+export function editBarber(api: ApiClient, id: string, data: BarberProfileData): Promise<BarberProfile> {
   return api.patch<BarberProfile>(`/api/v1/barbers/${id}`,
     { experienceYears: data.experienceYears, bio: data.bio.trim() || null });
 }
