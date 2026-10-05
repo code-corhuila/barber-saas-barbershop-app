@@ -82,8 +82,6 @@ owner's services read from `barbershop-api` through the gateway.
 
 - **Booking.** *Continuar* hands over to `/appointments/new?barbershopId=…&serviceId=…`; the
   address must be agreed with `appointment-app`.
-- **Barber names in the list.** A barber profile carries no name or e-mail (`DEC-SHOP-04`); the list
-  shows the profile until OQ-08 decides how to compose it with identity-auth.
 - **An account left without a profile.** If the profile fails and the owner closes the form instead
   of retrying, the account exists in identity-auth without a profile (clients do not see it); there
   is no screen yet to finish it later.
