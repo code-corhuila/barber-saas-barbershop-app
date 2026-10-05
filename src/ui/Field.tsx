@@ -8,14 +8,15 @@ interface FieldProps {
   inputMode?: 'text' | 'numeric';
   multiline?: boolean;
   placeholder?: string;
+  disabled?: boolean;
   onChange(value: string): void;
 }
 
 /** A labelled input whose error is tied to it with aria-describedby (annex H), as in identity-auth-app. */
-export function Field({ id, label, value, error, inputMode = 'text', multiline, placeholder, onChange }: FieldProps) {
+export function Field({ id, label, value, error, inputMode = 'text', multiline, placeholder, disabled, onChange }: FieldProps) {
   const errorId = `${id}-error`;
   const common = {
-    id, label, value, placeholder,
+    id, label, value, placeholder, disabled,
     labelPlacement: 'stacked' as const,
     'aria-invalid': error ? 'true' as const : 'false' as const,
     'aria-describedby': error ? errorId : undefined,
