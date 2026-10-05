@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formatCop, pesosToCents } from './money';
-import { validateService, validateSpecialty, validateBarber } from './forms';
+import { validateBarber, validateNewBarber, validateService, validateSpecialty } from './forms';
 
 describe('money', () => {
   it('shows cents as Colombian pesos without decimals', () => {
@@ -39,18 +39,45 @@ describe('service form', () => {
 });
 
 describe('barber and specialty forms', () => {
-  it('needs the user id the owner received from identity and a non-negative experience', () => {
-    expect(validateBarber({ userId: 'not-an-id', experienceYears: '-1', bio: '' }).errors).toEqual({
-      userId: 'Pega el identificador del usuario barbero.',
+  it('edits a profile with a non-negative experience', () => {
+    expect(validateBarber({ experienceYears: '-1', bio: '' }).errors).toEqual({
       experienceYears: 'Los años de experiencia no pueden ser negativos.',
     });
-    expect(validateBarber({ userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6', experienceYears: '', bio: 'Fades' }).data)
-      .toEqual({ userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6', experienceYears: 0, bio: 'Fades' });
+    expect(validateBarber({ experienceYears: '', bio: 'Fades' }).data).toEqual({ experienceYears: 0, bio: 'Fades' });
   });
 
   it('keeps a specialty between 1 and 80 characters', () => {
     expect(validateSpecialty(' ')).toBe('Escribe la especialidad.');
     expect(validateSpecialty('x'.repeat(81))).toBe('La especialidad tiene máximo 80 caracteres.');
     expect(validateSpecialty('Fade')).toBeNull();
+  });
+});
+
+describe('new barber form', () => {
+  it('accepts what auth-service.yaml accepts, with the phone optional', () => {
+    const result = validateNewBarber({ fullName: ' Juan Pérez ', email: 'juan@elclasico.co', phone: '', password: 'Inicial2026' });
+
+    expect(result.errors).toEqual({});
+    expect(result.data).toEqual({ fullName: 'Juan Pérez', email: 'juan@elclasico.co', phone: '', password: 'Inicial2026' });
+  });
+
+  it('explains in Spanish every field the contract would reject', () => {
+    const result = validateNewBarber({ fullName: ' ', email: 'juan@', phone: '1'.repeat(21), password: 'inicial' });
+
+    expect(result.data).toBeNull();
+    expect(result.errors).toEqual({
+      fullName: 'Escribe el nombre del barbero.',
+      email: 'Escribe un correo válido.',
+      phone: 'El teléfono tiene máximo 20 caracteres.',
+      password: 'La contraseña necesita al menos 8 caracteres, una mayúscula y un número.',
+    });
+  });
+
+  it('asks for an uppercase letter and a digit in the initial password', () => {
+    const base = { fullName: 'Juan', email: 'juan@elclasico.co', phone: '' };
+
+    expect(validateNewBarber({ ...base, password: 'inicial2026' }).errors.password).toBeDefined();
+    expect(validateNewBarber({ ...base, password: 'InicialDos' }).errors.password).toBeDefined();
+    expect(validateNewBarber({ ...base, password: 'Inicial2026' }).errors.password).toBeUndefined();
   });
 });
