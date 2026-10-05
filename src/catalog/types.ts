@@ -56,8 +56,26 @@ export interface ServiceData {
   priceCents: number;
 }
 
-export interface BarberData {
-  userId: string;
+export interface BarberProfileData {
   experienceYears: number;
   bio: string;
+}
+
+export interface BarberData extends BarberProfileData {
+  userId: string;
+}
+
+/** What the owner types to create a barber account (CreateBarberRequest); phone blank when not given. */
+export interface NewBarber {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+/** UserSummary of auth-service.yaml: only the id is needed to create the profile. */
+export interface UserSummary {
+  id: string;
+  fullName: string;
+  email: string;
 }

@@ -1,5 +1,5 @@
 import { pesosToCents } from './money';
-import type { BarberData, ServiceData } from './types';
+import type { BarberProfileData, NewBarber, ServiceData } from './types';
 
 /**
  * Field checks with the limits of barbershop-service.yaml, so the owner reads what is wrong before
@@ -12,7 +12,9 @@ export interface Checked<T> {
   errors: FieldErrors;
 }
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** auth-service.yaml Password: 8 to 100 characters, one uppercase letter and one digit. */
+const PASSWORD = /^(?=.*[A-Z])(?=.*\d).{8,100}$/;
 
 export function validateService(form: { name: string; description: string; duration: string; price: string }):
     Checked<ServiceData> {
@@ -30,16 +32,30 @@ export function validateService(form: { name: string; description: string; durat
     errors };
 }
 
-/** The user is created in identity-auth; the owner pastes its id here (auth-service.yaml has no lookup yet). */
-export function validateBarber(form: { userId: string; experienceYears: string; bio: string }): Checked<BarberData> {
+/** The editable part of a barber profile; the user account is not edited here. */
+export function validateBarber(form: { experienceYears: string; bio: string }): Checked<BarberProfileData> {
   const errors: FieldErrors = {};
-  const userId = form.userId.trim();
-  if (!UUID.test(userId)) errors.userId = 'Pega el identificador del usuario barbero.';
   const years = form.experienceYears.trim() === '' ? 0 : Number(form.experienceYears);
   if (!Number.isInteger(years) || years < 0) errors.experienceYears = 'Los años de experiencia no pueden ser negativos.';
   if (form.bio.trim().length > 500) errors.bio = 'La biografía tiene máximo 500 caracteres.';
   if (Object.keys(errors).length > 0) return { data: null, errors };
-  return { data: { userId, experienceYears: years, bio: form.bio.trim() }, errors };
+  return { data: { experienceYears: years, bio: form.bio.trim() }, errors };
+}
+
+/** CreateBarberRequest of auth-service.yaml (DEC-AUTH-05): the barbershop and the role come from the token. */
+export function validateNewBarber(form: NewBarber): Checked<NewBarber> {
+  const errors: FieldErrors = {};
+  const fullName = form.fullName.trim();
+  const email = form.email.trim();
+  if (!fullName) errors.fullName = 'Escribe el nombre del barbero.';
+  else if (fullName.length > 120) errors.fullName = 'El nombre tiene máximo 120 caracteres.';
+  if (!EMAIL.test(email) || email.length > 150) errors.email = 'Escribe un correo válido.';
+  if (form.phone.trim().length > 20) errors.phone = 'El teléfono tiene máximo 20 caracteres.';
+  if (!PASSWORD.test(form.password)) {
+    errors.password = 'La contraseña necesita al menos 8 caracteres, una mayúscula y un número.';
+  }
+  if (Object.keys(errors).length > 0) return { data: null, errors };
+  return { data: { fullName, email, phone: form.phone.trim(), password: form.password }, errors };
 }
 
 export function validateSpecialty(name: string): string | null {
