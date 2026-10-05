@@ -41,6 +41,7 @@ same dark and gold look, Ionic components.
 | Detail: services, barbers, *Continuar* to booking | anyone signed in | `GET /api/v1/barbershops/{id}`, `/services`, `/barbers` |
 | Services: create, edit, activate / deactivate | `ADMIN_BARBERSHOP` | `/api/v1/services` |
 | Barbers: profiles and specialties | `ADMIN_BARBERSHOP` | `/api/v1/barbers` |
+| Barbers: *Agregar barbero* (name, e-mail, phone, initial password) | `ADMIN_BARBERSHOP` | `POST /api/v1/auth/barbers` (`auth-service.yaml`), then `POST /api/v1/barbers` |
 
 ```
 src/mount.tsx              ./mount(element, context) — what the shell calls
@@ -81,8 +82,11 @@ owner's services read from `barbershop-api` through the gateway.
 
 - **Booking.** *Continuar* hands over to `/appointments/new?barbershopId=…&serviceId=…`; the
   address must be agreed with `appointment-app`.
-- **Creating barber accounts.** A new profile takes the id of a `BARBER` user that already exists:
-  `auth-service.yaml` has no operation to create staff yet.
+- **Barber names in the list.** A barber profile carries no name or e-mail (`DEC-SHOP-04`); the list
+  shows the profile until OQ-08 decides how to compose it with identity-auth.
+- **An account left without a profile.** If the profile fails and the owner closes the form instead
+  of retrying, the account exists in identity-auth without a profile (clients do not see it); there
+  is no screen yet to finish it later.
 - **Editing my barbershop** (`PATCH /api/v1/barbershops/me`) has no screen yet.
 - **Reviews, favourites, gallery and promotions** of the prototype are out of scope
   (`06-data/models.md` §11).
