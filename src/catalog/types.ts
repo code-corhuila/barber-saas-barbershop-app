@@ -1,7 +1,7 @@
 /**
  * The resources of barbershop-service.yaml, as the API returns them. They replace the prototype's
  * src/types/barbershop.ts: ids are UUIDs and money is integer cents (ADR-010), and the barber
- * profile carries no name or photo (DEC-SHOP-04).
+ * profile carries a copy of the barber's name and photo (DEC-SHOP-04, ADR-014).
  */
 export interface Barbershop {
   id: string;
@@ -36,6 +36,9 @@ export interface BarberSpecialty {
 export interface BarberProfile {
   id: string;
   userId: string;
+  /** null only for a profile created before ADR-014. */
+  fullName: string | null;
+  profilePhotoUrl: string | null;
   experienceYears: number;
   bio: string | null;
   ratingAvg: number;
