@@ -63,6 +63,7 @@ export function App({ context }: { context: MountContext }) {
       <style>{STYLES}</style>
       {isOwner && route.name !== 'detail' && (
         <div className="bs-page" style={{ paddingBottom: 0 }}>
+          <h1 className="bs-header">Mi barbería</h1>
           <IonSegment className="bs-tabs" value={route.name}
                       onIonChange={(e) => go(OWNER_TABS.find((t) => t.route.name === e.detail.value)?.route
                         ?? { name: 'search' })}>
