@@ -32,6 +32,7 @@ export const STYLES = `
 .bs-field { margin-bottom: .75rem; }
 .bs-field ion-input, .bs-field ion-textarea { --background: #1e1e1e; --color: #fff; --placeholder-color: #666;
   --border-radius: 10px; --padding-start: 12px; --highlight-color-focused: #d4af37; }
+.bs-card .bs-field ion-input { --background: #2a2a2a; }
 .bs-field-error { color: #ff6b6b; font-size: .8rem; margin-top: .3rem; }
 .bs-alert { background: #2a1414; border: 1px solid #ff6b6b; color: #ffb3b3; border-radius: 10px; padding: .75rem;
   margin: .5rem 0; font-size: .875rem; }
