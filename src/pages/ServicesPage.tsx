@@ -36,7 +36,7 @@ export function ServicesPage({ api }: { api: ApiClient }) {
   return (
     <section className="bs-page">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 className="bs-header">Servicios</h1>
+        <h2 className="bs-header">Servicios</h2>
         <IonButton className="bs-primary" onClick={() => setEditing(null)}>+ Nuevo</IonButton>
       </div>
       {failure && <div className="bs-alert" role="alert">{failure}</div>}

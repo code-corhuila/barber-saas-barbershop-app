@@ -68,7 +68,7 @@ export function BarbersPage({ api }: { api: ApiClient }) {
   return (
     <section className="bs-page">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 className="bs-header">Barberos</h1>
+        <h2 className="bs-header">Barberos</h2>
         <IonButton className="bs-primary" onClick={() => setAdding(true)}>+ Agregar</IonButton>
       </div>
       {failure && <div className="bs-alert" role="alert">{failure}</div>}
