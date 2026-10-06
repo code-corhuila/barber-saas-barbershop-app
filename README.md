@@ -64,7 +64,7 @@ npm start      # builds and serves dist/barbershop at http://localhost:4302 (COR
 ```
 
 Then start the shell (`npm start` in `barber-saas-front`) and the platform (`./scripts/up.sh dev`
-in `barber-saas-infra`), and open `/barbershops`. The gateway accepts the shell's origins
+in `barber-saas-infra-postgres`), and open `/barbershops`. The gateway accepts the shell's origins
 `http://localhost:4200` and `http://localhost:8100`.
 
 ### Where the data is
