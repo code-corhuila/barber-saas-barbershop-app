@@ -27,6 +27,11 @@ export function searchBarbershops(api: ApiClient, search: Search): Promise<Page<
   return api.get<Page<Barbershop>>(`/api/v1/barbershops?${query}`);
 }
 
+/** The token's barbershop, for its owner and staff. */
+export function getMyBarbershop(api: ApiClient): Promise<Barbershop> {
+  return api.get<Barbershop>('/api/v1/barbershops/me');
+}
+
 export function getBarbershop(api: ApiClient, id: string): Promise<Barbershop> {
   return api.get<Barbershop>(`/api/v1/barbershops/${id}`);
 }
