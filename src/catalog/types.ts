@@ -16,6 +16,8 @@ export interface Barbershop {
   status: 'TRIAL' | 'ACTIVE' | 'SUSPENDED' | 'CANCELLED';
   timezone: string;
   cancellationPolicyHours: number;
+  /** Its barber profiles, counted on read (DEC-SHOP-07). */
+  activeBarbers: number;
 }
 
 export interface Service {
