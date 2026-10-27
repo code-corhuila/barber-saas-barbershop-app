@@ -7,6 +7,7 @@ import type { BarberProfile } from '../catalog/types';
 import { checkBarberRoom } from '../plan/barber-room';
 import type { ApiClient } from '../shell-contract';
 import { LoadView } from '../ui/LoadView';
+import { Rating } from '../ui/Rating';
 import { messageOf, newIdempotencyKey, useLoad } from '../ui/load';
 import { AddBarberForm } from './AddBarberForm';
 import { BarberForm } from './BarberForm';
@@ -44,15 +45,23 @@ function SpecialtyAdder({ api, barber, onChanged }: { api: ApiClient; barber: Ba
   );
 }
 
+interface BarbersPageProps {
+  api: ApiClient;
+  /** The session's barbershop, for the reviews of its barbers. */
+  barbershopId: string | null;
+  onOpenPlan(): void;
+}
+
 /**
  * The owner's barbers: the profiles of their barbershop with experience, bio and specialties, and
  * "Agregar barbero" (account and profile, HU-SHOP-002). It replaces the prototype's (admin)/employees
  * for what the barbershop domain owns; commissions and payroll belong to other domains. Only the
  * owner reaches it (App shows it for ADMIN_BARBERSHOP; the services answer 403 to anyone else).
- * Before the form opens, the plan's barber limit is checked (DEC-SHOP-07): a full plan sends the
- * owner to "Mi plan" instead, so no account is created that could not get its profile.
+ * Each barber shows the summary of their reviews. Before the form opens, the plan's barber limit is
+ * checked (DEC-SHOP-07): a full plan sends the owner to "Mi plan" instead, so no account is created
+ * that could not get its profile.
  */
-export function BarbersPage({ api, onOpenPlan }: { api: ApiClient; onOpenPlan(): void }) {
+export function BarbersPage({ api, barbershopId, onOpenPlan }: BarbersPageProps) {
   const [result, reload] = useLoad(() => listMyBarbers(api), [], 'No se pudieron cargar tus barberos.');
   const [editing, setEditing] = useState<BarberProfile | null>(null);
   const [adding, setAdding] = useState(false);
@@ -106,7 +115,7 @@ export function BarbersPage({ api, onOpenPlan }: { api: ApiClient; onOpenPlan():
               <span>
                 <p className="bs-title">{barberName(barber)}</p>
                 <p className="bs-muted">{barber.experienceYears} años de experiencia</p>
-                {barber.ratingCount > 0 && <p className="bs-gold">⭐ {barber.ratingAvg.toFixed(1)} ({barber.ratingCount})</p>}
+                {barbershopId && <Rating api={api} barbershopId={barbershopId} barberId={barber.id} />}
                 {barber.bio && <p className="bs-muted">{barber.bio}</p>}
               </span>
               <IonButton size="small" fill="clear" className="bs-secondary" onClick={() => setEditing(barber)}>Editar</IonButton>
