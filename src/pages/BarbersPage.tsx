@@ -4,6 +4,7 @@ import { barberName } from '../catalog/barber-name';
 import { addSpecialty, listMyBarbers, removeSpecialty } from '../catalog/catalog-api';
 import { validateSpecialty } from '../catalog/forms';
 import type { BarberProfile } from '../catalog/types';
+import { checkBarberRoom } from '../plan/barber-room';
 import type { ApiClient } from '../shell-contract';
 import { LoadView } from '../ui/LoadView';
 import { messageOf, newIdempotencyKey, useLoad } from '../ui/load';
@@ -48,12 +49,31 @@ function SpecialtyAdder({ api, barber, onChanged }: { api: ApiClient; barber: Ba
  * "Agregar barbero" (account and profile, HU-SHOP-002). It replaces the prototype's (admin)/employees
  * for what the barbershop domain owns; commissions and payroll belong to other domains. Only the
  * owner reaches it (App shows it for ADMIN_BARBERSHOP; the services answer 403 to anyone else).
+ * Before the form opens, the plan's barber limit is checked (DEC-SHOP-07): a full plan sends the
+ * owner to "Mi plan" instead, so no account is created that could not get its profile.
  */
-export function BarbersPage({ api }: { api: ApiClient }) {
+export function BarbersPage({ api, onOpenPlan }: { api: ApiClient; onOpenPlan(): void }) {
   const [result, reload] = useLoad(() => listMyBarbers(api), [], 'No se pudieron cargar tus barberos.');
   const [editing, setEditing] = useState<BarberProfile | null>(null);
   const [adding, setAdding] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
+  const [planFull, setPlanFull] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  async function startAdding() {
+    setFailure(null);
+    setPlanFull(null);
+    setChecking(true);
+    try {
+      const room = await checkBarberRoom(api);
+      if (room.full) setPlanFull(room.message);
+      else setAdding(true);
+    } catch (err) {
+      setFailure(messageOf(err, 'No se pudo revisar tu plan. Intenta de nuevo.'));
+    } finally {
+      setChecking(false);
+    }
+  }
 
   async function remove(barber: BarberProfile, specialtyId: string) {
     setFailure(null);
@@ -69,9 +89,15 @@ export function BarbersPage({ api }: { api: ApiClient }) {
     <section className="bs-page">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 className="bs-header">Barberos</h2>
-        <IonButton className="bs-primary" onClick={() => setAdding(true)}>+ Agregar</IonButton>
+        <IonButton className="bs-primary" disabled={checking} onClick={startAdding}>+ Agregar</IonButton>
       </div>
       {failure && <div className="bs-alert" role="alert">{failure}</div>}
+      {planFull && (
+        <div className="bs-alert" role="alert">
+          <p style={{ margin: 0 }}>{planFull}</p>
+          <IonButton size="small" className="bs-primary" onClick={onOpenPlan}>Ver Mi plan</IonButton>
+        </div>
+      )}
       <LoadView load={result} onRetry={reload} isEmpty={(page) => page.data.length === 0}
                 empty="Aún no tienes barberos. Agrega el primero.">
         {(page) => page.data.map((barber) => (
