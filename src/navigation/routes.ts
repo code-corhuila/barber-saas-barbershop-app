@@ -38,6 +38,9 @@ export function startRoute(initialPath: string, role: SessionUser['role'] | unde
   return route;
 }
 
+/** The shell's "Mi plan" (barber-saas-front, app.routes.ts): the plan, the trial and paying it (HU-SHOP-003). */
+export const MY_PLAN_PATH = '/profile/plan';
+
 /**
  * Booking belongs to the appointment domain (appointment-app): this app only hands over the chosen
  * barbershop and service. The address is agreed with the owner of appointment-app.
