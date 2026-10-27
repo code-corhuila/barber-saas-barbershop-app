@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import type { MountContext } from './shell-contract';
-import { bookingPath, parseRoute, routePath, startRoute, type Route } from './navigation/routes';
+import { MY_PLAN_PATH, bookingPath, parseRoute, routePath, startRoute, type Route } from './navigation/routes';
 import { BarbersPage } from './pages/BarbersPage';
 import { DetailPage } from './pages/DetailPage';
 import { SearchPage } from './pages/SearchPage';
@@ -51,7 +51,7 @@ export function App({ context }: { context: MountContext }) {
         if (isOwner) return <ServicesPage api={context.api} />;
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
       case 'barbers':
-        if (isOwner) return <BarbersPage api={context.api} />;
+        if (isOwner) return <BarbersPage api={context.api} onOpenPlan={() => context.navigate(MY_PLAN_PATH)} />;
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
       default:
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
