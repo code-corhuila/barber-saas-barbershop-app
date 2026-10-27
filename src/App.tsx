@@ -51,7 +51,10 @@ export function App({ context }: { context: MountContext }) {
         if (isOwner) return <ServicesPage api={context.api} />;
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
       case 'barbers':
-        if (isOwner) return <BarbersPage api={context.api} onOpenPlan={() => context.navigate(MY_PLAN_PATH)} />;
+        if (isOwner) {
+          return <BarbersPage api={context.api} barbershopId={context.session.barbershopId()}
+                              onOpenPlan={() => context.navigate(MY_PLAN_PATH)} />;
+        }
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;
       default:
         return <SearchPage api={context.api} onOpen={(id) => go({ name: 'detail', id })} />;

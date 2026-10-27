@@ -5,6 +5,7 @@ import { getBarbershop, listPublicBarbers, listPublicServices } from '../catalog
 import { formatCop } from '../catalog/money';
 import type { ApiClient } from '../shell-contract';
 import { LoadView } from '../ui/LoadView';
+import { Rating } from '../ui/Rating';
 import { useLoad } from '../ui/load';
 
 interface DetailPageProps {
@@ -17,8 +18,9 @@ interface DetailPageProps {
 /**
  * The prototype's (client)/barbershop/[id]: the barbershop, its active services and its barbers,
  * read from the public catalog (DEC-SHOP-02). Choosing a service hands over to booking, which
- * belongs to the appointment domain. Reviews, favourites, gallery and promotions are not carried
- * over: they are outside the scope (06-data/models.md §11).
+ * belongs to the appointment domain. The rating of the barbershop and of each barber is the summary
+ * of appointment-api's reviews (HU-APPT-005); favourites, gallery and promotions are out of scope
+ * (06-data/models.md §11).
  */
 export function DetailPage({ api, id, onBack, onBook }: DetailPageProps) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -34,6 +36,7 @@ export function DetailPage({ api, id, onBack, onBook }: DetailPageProps) {
           <>
             {shop.logoUrl && <img className="bs-banner" src={shop.logoUrl} alt="" />}
             <h1 className="bs-header">{shop.name}</h1>
+            <Rating api={api} barbershopId={shop.id} />
             <p className="bs-muted">{[shop.address, shop.city].filter(Boolean).join(', ')}</p>
             {shop.phone && <p className="bs-muted">Teléfono: {shop.phone}</p>}
             <p className="bs-muted">Puedes cancelar hasta {shop.cancellationPolicyHours} h antes de tu cita.</p>
@@ -63,7 +66,7 @@ export function DetailPage({ api, id, onBack, onBook }: DetailPageProps) {
                   <span className="bs-grow">
                     <p className="bs-title">{barberName(barber)}</p>
                     <p className="bs-muted">{barber.experienceYears} años de experiencia</p>
-                    {barber.ratingCount > 0 && <p className="bs-gold">⭐ {barber.ratingAvg.toFixed(1)} ({barber.ratingCount})</p>}
+                    <Rating api={api} barbershopId={id} barberId={barber.id} />
                     {barber.bio && <p className="bs-muted">{barber.bio}</p>}
                     {barber.specialties.length > 0 && (
                       <span className="bs-chips">
