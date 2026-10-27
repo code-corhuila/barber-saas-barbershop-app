@@ -39,6 +39,7 @@ same dark and gold look, Ionic components.
 |---|---|---|
 | Search: near the client or by city | anyone signed in | `GET /api/v1/barbershops` |
 | Detail: services, barbers, *Continuar* to booking | anyone signed in | `GET /api/v1/barbershops/{id}`, `/services`, `/barbers` |
+| Rating of the barbershop and of each barber (detail and team screen) | anyone signed in | `GET /api/v1/reviews?barbershopId=`(`&barberId=`) (`appointment-service.yaml`, only its `summary`) |
 | Services: create, edit, activate / deactivate | `ADMIN_BARBERSHOP` | `/api/v1/services` |
 | Barbers: profiles and specialties | `ADMIN_BARBERSHOP` | `/api/v1/barbers` |
 | Barbers: *Agregar barbero* (name, e-mail, phone, initial password) | `ADMIN_BARBERSHOP` | `POST /api/v1/auth/barbers` (`auth-service.yaml`), then `POST /api/v1/barbers` |
@@ -49,6 +50,7 @@ src/mount.tsx              ./mount(element, context) — what the shell calls
 src/shell-contract.ts      the types of the contract with the shell (copied, never imported)
 src/catalog/               typed calls through context.api, forms with the contract's limits, money in cents
 src/plan/                  the plan's barber limit, read from my barbershop and my subscription
+src/reviews/               the review summary of appointment-api: average with one decimal, count, stars
 src/navigation/routes.ts   the routes inside /barbershops and the hand-over to booking
 src/pages/                 SearchPage, DetailPage, ServicesPage, BarbersPage and their forms
 src/ui/                    the four states of every view, fields, styles
@@ -88,5 +90,5 @@ owner's services read from `barbershop-api` through the gateway.
   of retrying, the account exists in identity-auth without a profile (clients do not see it); there
   is no screen yet to finish it later.
 - **Editing my barbershop** (`PATCH /api/v1/barbershops/me`) has no screen yet.
-- **Reviews, favourites, gallery and promotions** of the prototype are out of scope
-  (`06-data/models.md` §11).
+- **Favourites, gallery and promotions** of the prototype are out of scope (`06-data/models.md` §11);
+  reviews are shown since MVP 3, read from appointment-api.
