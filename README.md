@@ -42,11 +42,13 @@ same dark and gold look, Ionic components.
 | Services: create, edit, activate / deactivate | `ADMIN_BARBERSHOP` | `/api/v1/services` |
 | Barbers: profiles and specialties | `ADMIN_BARBERSHOP` | `/api/v1/barbers` |
 | Barbers: *Agregar barbero* (name, e-mail, phone, initial password) | `ADMIN_BARBERSHOP` | `POST /api/v1/auth/barbers` (`auth-service.yaml`), then `POST /api/v1/barbers` |
+| Barbers: the plan's barber limit, checked before *Agregar barbero* (`DEC-SHOP-07`) | `ADMIN_BARBERSHOP` | `GET /api/v1/barbershops/me` (`activeBarbers`) and `GET /api/v1/subscription` (`platform-admin-service.yaml`, `plan.maxBarbers`); full → *Ver Mi plan* (`/profile/plan` of the shell) |
 
 ```
 src/mount.tsx              ./mount(element, context) — what the shell calls
 src/shell-contract.ts      the types of the contract with the shell (copied, never imported)
 src/catalog/               typed calls through context.api, forms with the contract's limits, money in cents
+src/plan/                  the plan's barber limit, read from my barbershop and my subscription
 src/navigation/routes.ts   the routes inside /barbershops and the hand-over to booking
 src/pages/                 SearchPage, DetailPage, ServicesPage, BarbersPage and their forms
 src/ui/                    the four states of every view, fields, styles
