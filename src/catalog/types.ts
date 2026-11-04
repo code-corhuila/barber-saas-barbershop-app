@@ -48,6 +48,9 @@ export interface BarberProfile {
   specialties: BarberSpecialty[];
 }
 
+/** A barber of the public catalog (docs#165): GET /barbershops/{id}/barbers never sends the account id. */
+export type PublicBarber = Omit<BarberProfile, 'userId'>;
+
 /** The {data, meta} envelope of every list (_shared.yaml). */
 export interface Page<T> {
   data: T[];
