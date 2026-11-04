@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-11-05
+
+User stories: code-corhuila/barber-saas-docs#126, code-corhuila/barber-saas-docs#130, code-corhuila/barber-saas-docs#165
+
+### Added
+
+- **plan:** check the plan's barber limit with my barbershop and my subscription
+- **barbers:** show the plan's barber limit before adding a barber
+- **reviews:** read the review summary of a barbershop or a barber
+- **reviews:** show the rating of the barbershop and of each barber in gold
+
+### Fixed
+
+- **catalog:** type the public barbers without the account id
+
+### Documentation
+
+- **readme:** explain the barber limit on the team screen
+- **readme:** explain where the ratings come from
+
+### Tests
+
+- **plan:** specify the barber limit check before adding a barber
+- **reviews:** specify the review summary of the barbershop and each barber
+
 ## [2.0.0] - 2026-10-08
 
 User stories: code-corhuila/barber-saas-docs#4, code-corhuila/barber-saas-docs#59, code-corhuila/barber-saas-docs#67, code-corhuila/barber-saas-docs#76
@@ -67,4 +92,5 @@ User stories: code-corhuila/barber-saas-docs#4, code-corhuila/barber-saas-docs#5
 - **ui:** keep the dark and gold look of the prototype
 - use the new repository name barber-saas-infra-postgres
 
+[3.0.0]: https://github.com/code-corhuila/barber-saas-barbershop-app/releases/tag/v3.0.0
 [2.0.0]: https://github.com/code-corhuila/barber-saas-barbershop-app/releases/tag/v2.0.0
