@@ -1,6 +1,6 @@
 import type { ApiClient } from '../shell-contract';
 import type {
-  BarberData, BarberProfile, BarberProfileData, BarberSpecialty, Barbershop, Page, Service, ServiceData,
+  BarberData, BarberProfile, BarberProfileData, BarberSpecialty, Barbershop, Page, PublicBarber, Service, ServiceData,
 } from './types';
 
 /**
@@ -40,8 +40,8 @@ export function listPublicServices(api: ApiClient, barbershopId: string): Promis
   return api.get<Page<Service>>(`/api/v1/barbershops/${barbershopId}/services?limit=100`);
 }
 
-export function listPublicBarbers(api: ApiClient, barbershopId: string): Promise<Page<BarberProfile>> {
-  return api.get<Page<BarberProfile>>(`/api/v1/barbershops/${barbershopId}/barbers?limit=100`);
+export function listPublicBarbers(api: ApiClient, barbershopId: string): Promise<Page<PublicBarber>> {
+  return api.get<Page<PublicBarber>>(`/api/v1/barbershops/${barbershopId}/barbers?limit=100`);
 }
 
 /** The owner sees active and inactive services of their barbershop. */
